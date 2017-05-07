@@ -10,9 +10,11 @@ public class cameraMovement : MonoBehaviour {
 	private KeyCode rightKey = KeyCode.RightArrow;
 	private KeyCode forwardKey = KeyCode.RightBracket;
 	private KeyCode backwardKey = KeyCode.LeftBracket;
+	private Light torch;
 	// Use this for initialization
 	void Start () {
-		
+		torch = transform.GetComponent<Light> ();
+		torch.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -23,6 +25,9 @@ public class cameraMovement : MonoBehaviour {
 		Move (Vector3.right, rightKey);
 		Move (Vector3.forward, forwardKey);
 		Move (Vector3.back, backwardKey);
+		if (Input.GetKeyDown (KeyCode.F)) {
+			torch.enabled = !torch.enabled;
+		}
 	}
 
 	void Move(Vector3 dir, KeyCode key){
