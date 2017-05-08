@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class automaticMondrian : MonoBehaviour {
 	private Vector3 spawnPos;
@@ -19,11 +20,14 @@ public class automaticMondrian : MonoBehaviour {
 	private Slider yellowScale;
 
 	private Camera mainCamera;
+    private Camera bulletCamera;
+    private Vector3 muzzle;
 
 	public GameObject redCubes;
 	public GameObject blueCubes;
 	public GameObject yellowCubes;
 	public GameObject blackCubes;
+    public GameObject bullet;
 	//public float orthoCameraSize = 50;
 
 	// Use this for initialization
@@ -41,7 +45,9 @@ public class automaticMondrian : MonoBehaviour {
 		fieldOfViewSize = GameObject.Find ("Camera angle").GetComponent<Slider> ();
 		mainCamera = GameObject.Find ("Main Camera").GetComponent<Camera> ();
 		ortho = true;
-	}
+        muzzle = GameObject.Find("Main Camera").transform.position;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -53,19 +59,42 @@ public class automaticMondrian : MonoBehaviour {
 			BlackBar ();
 		}
 
-		if (Input.GetKeyDown (KeyCode.C) && mainCamera.orthographic == false) {
-			mainCamera.orthographic = true;
+		if (Input.GetKeyDown (KeyCode.C)) {
+			mainCamera.orthographic = !mainCamera.orthographic;
 
-			ortho = true;
+		
 		}
 
-		if (Input.GetKeyDown (KeyCode.V) && ortho == true) {
+		/*if (Input.GetKeyDown (KeyCode.V) && ortho == true) {
 			mainCamera.orthographic = false;
 
 			ortho = false;
-		}
+		}*/
 		mainCamera.fieldOfView = fieldOfViewSize.value;
 		mainCamera.orthographicSize = fieldOfViewSize.value;
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            GameObject projectile = Instantiate(bullet, muzzle, Quaternion.identity) as GameObject;
+            bulletCamera = projectile.GetComponent<Camera>();
+            Rigidbody rb = projectile.GetComponent<Rigidbody>();
+
+            bulletCamera.orthographic = !mainCamera.orthographic;
+            bulletCamera.fieldOfView = fieldOfViewSize.value;
+            bulletCamera.orthographicSize = fieldOfViewSize.value;
+            rb.velocity = new Vector3(0, 0, 50f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SceneManager.LoadScene("canvas1", LoadSceneMode.Single);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SceneManager.LoadScene("canvas2", LoadSceneMode.Single);
+        }
+
 	}
 
 	void PaintRed () {
